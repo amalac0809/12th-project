@@ -1,0 +1,189 @@
+#include<fstream.h>
+#include<conio.h>
+#include<stdio.h>
+#include<string.h>
+#include<graphics.h>
+#include<dos.h>
+class hotel
+{
+int hcode;
+char name[50];
+int price;
+char exp[20];
+float rate;
+public:
+void getinfo()
+{
+cout<<"Enter hotel code:"<<endl;
+cin>>hcode;
+cout<<"Enter hotels name:"<<endl;
+gets(name);
+cout<<"Enter price range:"<<endl;
+cin>>price;
+cout<<"How was your experience with the hotel\n(*)EXCELLENT\n(*)VERY GOOD\n(*)GOOD\n(*)BAD\n(*)POOR\n"<<endl;
+gets(exp);
+}
+float rating()
+{
+if(strcmpi(exp,"excellent")==0)
+{
+rate=5.0;
+return rate;
+}
+else if(strcmpi(exp,"VERY GOOD")==0)
+{
+rate=4.0;
+return rate;
+}
+else if(strcmpi(exp,"good")==0)
+{
+rate=3.0;
+return rate;
+}
+else if(strcmpi(exp,"bad")==0)
+{
+rate=2.0;
+return rate;
+}
+else if(strcmpi(exp,"poor")==0)
+{
+rate=1.0;
+return rate;
+}
+else rate=0.0;
+return rate;
+}
+void disp()
+{
+float p;
+cout<<"HOTEL CODE:";
+cout<<hcode<<endl;
+cout<<"HOTEL NAME:";
+puts(name);
+cout<<"HOTEL PRICE RANGE:"<<price<<endl;
+p=rating();
+cout<<"HOTEL RATING:"<<p<<endl;
+}
+int retcode()
+{
+return hcode;
+}
+}s;
+void append()
+{
+fstream f;
+f.open("hotel.dat",ios::out,ios::app|ios::binary);
+s.getinfo();
+f.write((char *)&s,sizeof(s));
+f.close();
+}
+void search()
+{
+int z;
+fstream f;
+f.open("hotel.dat",ios::in|ios::binary);
+cout<<"Enter hotel code:";
+cin>>z;
+while(f.read((char *)&s,sizeof(s)))
+{
+if(z==s.retcode())
+{
+s.disp();
+}
+else
+cout<<"HOTEL NOT FOUND..!!"<<endl;
+}
+}
+void del()
+{
+int x;
+fstream f,t;
+f.open("hotel.dat",ios::in|ios::binary);
+t.open("temp.dat",ios::out|ios::binary);
+cout<<"Enter the hotel code of hotel to be deleted:";
+cin>>x;
+while(f.read((char *)&s,sizeof(s)))
+{
+if(x!=s.retcode())
+t.write((char *)&s,sizeof(s));
+}
+f.close();t.close();
+remove("hotel.dat");
+rename("temp.dat","hotel.dat");
+}
+void main()
+{
+clrscr();
+char y;
+int n,ch;
+fstream f;
+cout<<"Enter number of hotels:";
+cin>>n;
+f.open("hotel.dat",ios::out||ios::binary);
+for(int i=0;i<n;++i)
+{
+s.getinfo();
+f.write((char *)&s,sizeof(s));
+}
+f.close();
+clrscr();
+/*      int gd=DETECT,gm;
+	initgraph(&gd,&gm,"tc:\bgi");
+	settextstyle(10,0,5);
+	outtextxy(100,0,"LIVE_KOCHI");
+	cout<<endl;
+	settextstyle(1,0,7);
+	outtextxy(70,90,"HOTEL FINDER");
+	cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n\tWelcome to the best hotel finder app in kochi..!!\n";
+	*/
+cout<<"L       I V    V EEEEEE....K   K  O O O  CCCCCCC H    H I\n";
+delay(1000);
+cout<<"L       I V    V E         K  K  O     O C       H    H I\n";
+delay(1000);
+cout<<"L       I V    V E         K K   O     O C       H    H I\n";
+delay(1000);
+cout<<"L       I V    V EEEEEE....KK    O     O C       HHHHHH I\n";
+delay(1000);
+cout<<"L       I V    V E         K K   O     O C       H    H I\n";
+delay(1000);
+cout<<"L       I  V  V  E         K  K  O     O C       H    H I\n";
+delay(1000);
+cout<<"LLLLLLL I   VV   EEEEEE....K   K  O O O  CCCCCCC H    H I\n\n";
+delay(750);
+cout<<"\tWelcome to the best hotel finder app in kochi..!!\n";
+do
+{
+cout<<"\t\t-->1)Add hotels\n";
+delay(750);
+cout<<"\t\t-->2)Search hotels\n";
+delay(750);
+cout<<"\t\t-->3)Delete hotels\n";
+delay(750);
+cout<<"\t\t-->4)Display hotels\n";
+cin>>ch;
+if(ch==1)
+{
+append();
+}
+else if(ch==2)
+{
+search();
+}
+else if(ch==3)
+{
+del();
+}
+else if(ch==4)
+{
+fstream f;
+f.open("hotel.dat",ios::in|ios::binary);
+while(f.read((char *)&s,sizeof(s)));
+s.disp();
+f.close();
+}
+cout<<"Do u want to continue..??";
+cin>>y;
+}
+while(y=='y');
+getch();
+}
